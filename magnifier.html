@@ -1,0 +1,109 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      width: 450px;
+      height: 450px;
+      border: 1px solid #aaa;
+      position: relative;
+      top: 100px;
+      left: 100px;
+    }
+
+    .small {
+      width: 450px;
+      height: 450px;
+      position: absolute;
+    }
+
+    .mask {
+      position: absolute;
+      background-color: rgba(255, 255, 0, .3);
+      width: 225px;
+      height: 225px;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+
+    .big {
+      width: 450px;
+      height: 450px;
+      border: 1px solid #aaa;
+      position: absolute;
+      left: 500px;
+      top: 0;
+      overflow: hidden;
+      display: none;
+    }
+
+    .big>img {
+      width: 900px;
+      height: 900px;
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <div class="small">
+      <img src="./images/s.jpg" alt="">
+      <div class="mask"></div>
+    </div>
+    <div class="big">
+      <img src="./images/big.jpg" alt="">
+    </div>
+  </div>
+</body>
+<script>
+    let small = document.querySelector('.small');
+    let big = document.querySelector('.big');
+    let box = document.querySelector('.box');
+    let shade = document.querySelector('.mask'); 
+    let imgBig = document.querySelector('.big img');
+    /* ========== 鼠标移入移除控制放大镜的显示与隐藏 */
+    small.onmouseover = function() {
+        big.style.display = 'block';
+        shade.style.display = 'block';
+    }
+    small.onmouseout = function() {
+        big.style.display = 'none';
+        shade.style.display = '';
+    }
+    /* ========== 黄色遮罩 */
+    small.onmousemove = function(e) {
+        let mouseX = e.pageX;
+        let mouseY = e.pageY;
+        let shadeX = e.pageX - box.offsetLeft - shade.offsetWidth / 2;
+        let shadeY = e.pageY - box.offsetTop - shade.offsetHeight / 2;
+        let shadeMX = small.offsetWidth - shade.offsetWidth;
+        let shadeMY = small.offsetHeight - shade.offsetHeight;
+        shadeX = shadeX <= 0? 0 : shadeX;
+        shadeY = shadeY <= 0? 0 : shadeY;
+        shadeX = shadeX >= shadeMX? shadeMX : shadeX;
+        shadeY = shadeY >= shadeMY? shadeMY : shadeY;
+        shade.style.top = shadeY + 'px';
+        shade.style.left = shadeX + 'px';
+        // 大图片与小图片一一对应
+        let bigMX = imgBig.offsetWidth - big.offsetWidth;
+        let bigMY = imgBig.offsetHeight - big.offsetHeight;
+        imgBig.style.left = -bigMX * shadeX / shadeMX + 'px';
+        imgBig.style.top = -bigMY * shadeY / shadeMY + 'px';
+    }
+    
+</script>
+</html>
